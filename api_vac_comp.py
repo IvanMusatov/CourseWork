@@ -14,6 +14,7 @@ class ApiVacComp(ABC):
 class HeadHunterAPI(ApiVacComp):
 
     def get_vacancies(self):
+
         url = 'https://api.hh.ru/vacancies'
         params = {'area': 1, 'text': 'python',
                   'per_page': 10}

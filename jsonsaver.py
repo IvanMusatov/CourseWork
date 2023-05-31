@@ -1,4 +1,5 @@
 import json
+
 from api_vac_comp import HeadHunterAPI, SuperJobAPI
 
 
@@ -8,6 +9,12 @@ class VacancyJSONWriter:
 
     def write_vacancies(self, vacancies):
         vacancy_data = []
+        try:
+            with open(self.filename, 'r', encoding='utf-8') as file:
+                vacancy_data = json.load(file)
+        except FileNotFoundError:
+            pass
+
         for vacancy in vacancies:
             vacancy_data.append({
                 'name': vacancy.name,
@@ -25,7 +32,7 @@ headhunter = HeadHunterAPI()
 vacancies = headhunter.get_vacancies()
 
 if vacancies:
-    writer = VacancyJSONWriter("headhunter_vacancies.json")
+    writer = VacancyJSONWriter("all_vacancies.json")
     writer.write_vacancies(vacancies)
 else:
     print("Не удалось получить данные о вакансиях с HeadHunter")
@@ -34,7 +41,7 @@ superjob = SuperJobAPI()
 vacancies = superjob.get_vacancies()
 
 if vacancies:
-    writer = VacancyJSONWriter("superjob_vacancies.json")
+    writer = VacancyJSONWriter("all_vacancies.json")
     writer.write_vacancies(vacancies)
 else:
     print("Не удалось получить данные о вакансиях с SuperJob")
