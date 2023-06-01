@@ -1,7 +1,8 @@
 import json
 
 
-def get_top_n_vacancies(filename, n):
+def get_top_n_vacancies(filename: str, n: int):
+    """Сортирует вакансии по значению зарплаты от наивысшей до наименьшей"""
     with open(filename, 'r', encoding='utf-8') as file:
         vacancies = json.load(file)
 
@@ -11,7 +12,8 @@ def get_top_n_vacancies(filename, n):
     return filtered_vacancies[:n]
 
 
-def get_sorted_vacancies(filename):
+def get_sorted_vacancies(filename: str):
+    """Сортирует вакансии по имени (алфавитный порядок)"""
     with open(filename, 'r', encoding='utf-8') as file:
         vacancies = json.load(file)
 
@@ -19,7 +21,8 @@ def get_sorted_vacancies(filename):
     return sorted_vacancies
 
 
-def get_vacancies_with_keywords(filename, keywords):
+def get_vacancies_with_keywords(filename: str, keywords: list):
+    """Фильтрует вакансии, оставляя только те, у которых описание (description)"""
     with open(filename, 'r', encoding='utf-8') as file:
         data = json.load(file)
 
@@ -32,5 +35,13 @@ def get_vacancies_with_keywords(filename, keywords):
                 if keyword.lower() in description:
                     filtered_vacancies.append(vacancy)
                     break
-
     return filtered_vacancies
+
+
+def format_vacancy(vacancy: dict):
+    """Форматирует информацию о вакансии в виде строки с указанием названия, ссылки, зарплаты (от и до), и описания."""
+    return f"Название: {vacancy['name']}\n" \
+           f"Ссылка: {vacancy['url']}\n" \
+           f"Зарплата от: {vacancy['salary_from']}\n" \
+           f"Зарплата до: {vacancy['salary_to']}\n" \
+           f"Описание: {vacancy['description']}\n"

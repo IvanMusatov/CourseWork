@@ -4,7 +4,9 @@ from api_vac_comp import HeadHunterAPI, SuperJobAPI
 
 
 class VacancyJSONWriter:
-    def __init__(self, filename):
+    """Класс позволяет сохранить вакансии """
+
+    def __init__(self, filename: str):
         self.filename = filename
 
     def write_vacancies(self, vacancies):
@@ -38,7 +40,8 @@ else:
     print("Не удалось получить данные о вакансиях с HeadHunter")
 
 superjob = SuperJobAPI()
-vacancies = superjob.get_vacancies()
+city = input("Введите город для поиска: ")
+vacancies = superjob.get_vacancies(city)
 
 if vacancies:
     writer = VacancyJSONWriter("all_vacancies.json")

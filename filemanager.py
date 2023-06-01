@@ -3,6 +3,7 @@ import json
 
 
 class VacancyFileManager(abc.ABC):
+    """Является абстрактным базовым классом, который определяет интерфейс для управления файлами с вакансиями"""
     @abc.abstractmethod
     def add_vacancy(self, vacancy):
         pass
@@ -17,15 +18,18 @@ class VacancyFileManager(abc.ABC):
 
 
 class JsonVacancyFileManager(VacancyFileManager):
-    def __init__(self, filename):
+    """Является конкретной реализацией VacancyFileManager для работы с JSON-файлами"""
+    def __init__(self, filename: str):
         self.filename = filename
 
     def add_vacancy(self, vacancy):
+        """Открывает файл и добавляет новую вакансию в JSON-формате на отдельной строке"""
         with open(self.filename, 'a', encoding='utf-8') as file:
             json.dump(vacancy, file, ensure_ascii=False)
             file.write('\n')
 
     def get_vacancies(self, criteria):
+        """Считывает содержимое файла, парсит каждую строку вакансии из JSON-формата"""
         with open(self.filename, 'r', encoding='utf-8') as file:
             vacancies = []
             for line in file:
@@ -35,6 +39,7 @@ class JsonVacancyFileManager(VacancyFileManager):
             return vacancies
 
     def delete_vacancies(self, criteria):
+        """Считывает содержимое файла, удаляет вакансии из файла"""
         with open(self.filename, 'r', encoding='utf-8') as file:
             lines = file.readlines()
 
@@ -44,7 +49,8 @@ class JsonVacancyFileManager(VacancyFileManager):
                 if not self.matches_criteria(vacancy, criteria):
                     file.write(line)
 
-    def get_top_n_vacancies(self, filename, n):
+    def get_top_n_vacancies(self, filename: str, n: int):
+        """Читает содержимое файла, парсит его в список вакансий и возвращает топ N вакансий с наивысшей зарплатой"""
         with open(filename, 'r', encoding='utf-8') as file:
             vacancies = json.load(file)
 
@@ -53,6 +59,7 @@ class JsonVacancyFileManager(VacancyFileManager):
 
     @staticmethod
     def matches_criteria(vacancy, criteria):
+        """Проверяет, соответствует ли вакансия заданным критериям"""
         keywords = criteria.get('keywords', [])
         for keyword in keywords:
             if keyword.lower() in vacancy['description'].lower():

@@ -1,6 +1,7 @@
 from api_vac_comp import HeadHunterAPI, SuperJobAPI
-from func import get_sorted_vacancies, get_top_n_vacancies, get_vacancies_with_keywords
+from func import get_sorted_vacancies, get_top_n_vacancies, get_vacancies_with_keywords, format_vacancy
 from jsonsaver import VacancyJSONWriter
+from jsonsaver import city
 
 
 def interact_with_user():
@@ -29,7 +30,7 @@ def interact_with_user():
                 print("Не удалось получить данные о вакансиях с HeadHunter")
         elif platform == "SuperJob":
             superjob = SuperJobAPI()
-            vacancies = superjob.get_vacancies()
+            vacancies = superjob.get_vacancies(city)
             if vacancies:
                 writer.write_vacancies(vacancies)
             else:
@@ -48,14 +49,20 @@ def interact_with_user():
         if choice == "1":
             n = int(input("Введите количество вакансий для вывода: "))
             top_vacancies = get_top_n_vacancies("all_vacancies.json", n)
-            print(top_vacancies)
+            for vacancy in top_vacancies:
+                print(format_vacancy(vacancy))
         elif choice == "2":
             sorted_vacancies = get_sorted_vacancies("all_vacancies.json")
-            print(sorted_vacancies)
+            for vacancy in sorted_vacancies:
+                print(format_vacancy(vacancy))
         elif choice == "3":
             keywords = input("Введите ключевые слова через запятую: ")
             vacancies_with_keywords = get_vacancies_with_keywords("all_vacancies.json", keywords)
-            print(vacancies_with_keywords)
+            for vacancy in vacancies_with_keywords:
+                print(format_vacancy(vacancy))
+        elif choice == '4':
+            print("Завершена работа программы")
+            break
         else:
             print("Неправильный выбор. Попробуйте ещё раз.")
 

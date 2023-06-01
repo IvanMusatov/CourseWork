@@ -1,3 +1,4 @@
+import os
 from abc import ABC, abstractmethod
 
 import requests
@@ -6,26 +7,26 @@ from vacancy import Vacancy
 
 
 class ApiVacComp(ABC):
+    """Позволяет конкретизировать метод получения вакансии для каждого сайта отдельно"""
     @abstractmethod
     def get_vacancies(self):
         pass
 
 
 class HeadHunterAPI(ApiVacComp):
+    """Получаем данные с сайта hh.ru"""
 
     def get_vacancies(self):
-
-        url = 'https://api.hh.ru/vacancies'
-        params = {'area': 1, 'text': 'python',
-                  'per_page': 10}
+        url: str = 'https://api.hh.ru/vacancies'
+        params: dict = {'area': 1, 'text': 'python', 'per_page': 10}
 
         response = requests.get(url, params=params)
 
         if response.status_code == 200:
-            data = response.json()
-            vac = []
+            data: dict = response.json()
+            vac: list[Vacancy] = []
             for el in data['items']:
-                salary = el.get('salary', {})
+                salary: dict = el.get('salary', {})
                 vac.append(
                     Vacancy(
                         name=el['name'],
@@ -42,17 +43,17 @@ class HeadHunterAPI(ApiVacComp):
 
 
 class SuperJobAPI(ApiVacComp):
+    """Получаем данные с сайта superjob.ru"""
 
-    def get_vacancies(self):
-        api_url = "https://api.superjob.ru/2.0/vacancies/"
-        headers = {
-            "X-Api-App-Id": 'v3.r.136827063.f661f27064438249cbbee73975923f1495039079.010e56f3e0e9f62e93b123aaa598d6c77e865db9'
-        }
-        params = {'keyword': 'python', 'town': 'Москва'}
+    def get_vacancies(self, city: str):
+        api_key: str = os.getenv('JOB_API')
+        api_url: str = "https://api.superjob.ru/2.0/vacancies/"
+        headers: dict = {'X-Api-App-Id': api_key}
+        params: dict = {'keyword': 'python', 'town': city}
         response = requests.get(api_url, headers=headers, params=params)
         if response.status_code == 200:
-            data = response.json()
-            vac = []
+            data: dict = response.json()
+            vac: list[Vacancy] = []
             for el in data['objects']:
                 try:
                     vac.append(
