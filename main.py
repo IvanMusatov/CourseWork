@@ -1,11 +1,11 @@
 from api_vac_comp import HeadHunterAPI, SuperJobAPI
 from func import get_sorted_vacancies, get_top_n_vacancies, get_vacancies_with_keywords, format_vacancy
 from jsonsaver import VacancyJSONWriter
-from jsonsaver import city
 
 
 def interact_with_user():
     print("Добро пожаловать в программу по поиску вакансий!")
+    city = input("Введите город для поиска: ")
     print("Выберите платформы для получения вакансий:")
     print("1. HeadHunter")
     print("2. SuperJob")

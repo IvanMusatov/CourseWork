@@ -17,16 +17,18 @@ class HeadHunterAPI(ApiVacComp):
     """Получаем данные с сайта hh.ru"""
 
     def get_vacancies(self):
-        url: str = 'https://api.hh.ru/vacancies'
-        params: dict = {'area': 1, 'text': 'python', 'per_page': 10}
+
+        url = 'https://api.hh.ru/vacancies'
+        params = {'area': 1, 'text': 'python',
+                  'per_page': 10}
 
         response = requests.get(url, params=params)
 
         if response.status_code == 200:
-            data: dict = response.json()
-            vac: list[Vacancy] = []
+            data = response.json()
+            vac = []
             for el in data['items']:
-                salary: dict = el.get('salary', {})
+                salary = el.get('salary', {})
                 vac.append(
                     Vacancy(
                         name=el['name'],
@@ -45,15 +47,15 @@ class HeadHunterAPI(ApiVacComp):
 class SuperJobAPI(ApiVacComp):
     """Получаем данные с сайта superjob.ru"""
 
-    def get_vacancies(self, city: str):
+    def get_vacancies(self, city):
         api_key: str = os.getenv('JOB_API')
-        api_url: str = "https://api.superjob.ru/2.0/vacancies/"
-        headers: dict = {'X-Api-App-Id': api_key}
-        params: dict = {'keyword': 'python', 'town': city}
+        api_url = "https://api.superjob.ru/2.0/vacancies/"
+        headers = {'X-Api-App-Id': api_key}
+        params = {'keyword': 'python', 'town': city}
         response = requests.get(api_url, headers=headers, params=params)
         if response.status_code == 200:
-            data: dict = response.json()
-            vac: list[Vacancy] = []
+            data = response.json()
+            vac = []
             for el in data['objects']:
                 try:
                     vac.append(

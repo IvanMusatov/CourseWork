@@ -4,6 +4,7 @@ import json
 
 class VacancyFileManager(abc.ABC):
     """Является абстрактным базовым классом, который определяет интерфейс для управления файлами с вакансиями"""
+
     @abc.abstractmethod
     def add_vacancy(self, vacancy):
         pass
@@ -19,6 +20,7 @@ class VacancyFileManager(abc.ABC):
 
 class JsonVacancyFileManager(VacancyFileManager):
     """Является конкретной реализацией VacancyFileManager для работы с JSON-файлами"""
+
     def __init__(self, filename: str):
         self.filename = filename
 
@@ -49,7 +51,8 @@ class JsonVacancyFileManager(VacancyFileManager):
                 if not self.matches_criteria(vacancy, criteria):
                     file.write(line)
 
-    def get_top_n_vacancies(self, filename: str, n: int):
+    @staticmethod
+    def get_top_n_vacancies(filename: str, n: int):
         """Читает содержимое файла, парсит его в список вакансий и возвращает топ N вакансий с наивысшей зарплатой"""
         with open(filename, 'r', encoding='utf-8') as file:
             vacancies = json.load(file)
